@@ -219,6 +219,8 @@ PRODUCT_PACKAGES += android.hardware.health@1.0-impl \
 #Supports verity
 PRODUCT_SUPPORTS_VERITY := true
 
+TARGET_MOUNT_POINTS_SYMLINKS := false
+
 PRODUCT_PACKAGES += \
     vendor.display.color@1.0-service \
     vendor.display.color@1.0-impl

@@ -46,13 +46,14 @@ on fs
     wait /dev/block/bootdevice/by-name/cache
     mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
 
-    wait /dev/block/bootdevice/by-name/persist
-    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
-    mkdir /persist/data 0700 system system
-    restorecon_recursive /persist
+    chown root system /mnt/vendor/persist
+    chmod 0771 /mnt/vendor/persist
+    mkdir /mnt/vendor/persist/data 0700 system system
+    mkdir /mnt/vendor/persist/bms 0700 root system
+    restorecon_recursive /mnt/vendor/persist
 
     wait /dev/block/bootdevice/by-name/modem
-    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+    mount vfat /dev/block/bootdevice/by-name/modem /vendor/firmware_mnt ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
     #write /sys/kernel/boot_adsp/boot 1
 
     wait /dev/block/bootdevice/by-name/oem
@@ -145,6 +146,9 @@ on charger
 on boot
     start rmt_storage
     insmod /system/lib/modules/adsprpc.ko
+
+# access permission for wlan
+    chown system system /mnt/vendor/persist/WCNSS_qcom_wlan_nv.bin
 
 service wcnss-service /system/vendor/bin/wcnss_service
     class main
